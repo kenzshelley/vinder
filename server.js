@@ -101,6 +101,6 @@ app.post('/receive_mp3', function(req, res) {
   res.send(hash);
 });
 
-app.listen(5000);
+app.listen(process.env.PORT || 5000);
 console.log('Listening on port 5000...');
 
