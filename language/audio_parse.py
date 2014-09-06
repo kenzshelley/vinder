@@ -63,5 +63,5 @@ def audio_parse(filename):
 	full_parse = get_features(full_text)
 	return full_parse
 
-x = audio_parse('audio/final_rap.wav')
-print(x)
+# x = audio_parse('audio/final_rap.wav')
+# print(x)
