@@ -7,6 +7,13 @@
     "express": "4.8.8",
     "body-parser": "*",
     "firebase": "*",
-    "python-shell": "*"
+    "python-shell": "*",
+    "jquery": "*",
+    "aws-sdk": "*", 
+    "knox": "*",
+    "node-fs": "*", 
+    "s3-upload": "*",
+    "MD5": "*",
+    "multer": "*"
   }
 }
