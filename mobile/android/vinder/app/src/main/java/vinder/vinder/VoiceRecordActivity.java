@@ -15,7 +15,11 @@ import android.widget.Toast;
 import org.apache.http.Header;
 import com.loopj.android.http.*;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class VoiceRecordActivity extends Activity {
     private Button mRecordButton;
@@ -68,19 +72,30 @@ public class VoiceRecordActivity extends Activity {
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                File soundFile = new File(mFileName);
+                RequestParams params = new RequestParams();
+
+                try {
+                    params.put("sound_file", soundFile);
+                } catch (FileNotFoundException e){
+                    Log.e("async", e.getLocalizedMessage());
+                }
+
                 AsyncHttpClient client = new AsyncHttpClient();
-                client.get("http://pastebin.com/raw.php?i=yD8yBR0E", new AsyncHttpResponseHandler() {
+
+                String url = new String ("http://pastebincom/raw.php?i=yD8yBR0E");
+                client.post(url, params, new AsyncHttpResponseHandler() {
                     @Override
                     public void onSuccess(int i, Header[] headers, byte[] bytes) {
                         String responseText = new String(bytes);
-                        Toast t = Toast.makeText(getApplicationContext(),responseText, Toast.LENGTH_SHORT);
+                        Toast t = Toast.makeText(getApplicationContext(),"SUCCESS: " + responseText, Toast.LENGTH_SHORT);
                         t.show();
                     }
 
                     @Override
                     public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-
-                        Toast t = Toast.makeText(getApplicationContext(),"failed", Toast.LENGTH_SHORT);
+                        String responseText = new String(bytes);
+                        Toast t = Toast.makeText(getApplicationContext(),"FAILURE: " + responseText, Toast.LENGTH_SHORT);
                         t.show();
                     }
                 });
