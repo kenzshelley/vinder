@@ -21,7 +21,6 @@ app.post('/recieve_mp3', function(req, res) {
 
   var audio = 5;
 
-  var text = req.body.
   var options = {
     mode: 'text',
     args: [audio, 'user_id']
