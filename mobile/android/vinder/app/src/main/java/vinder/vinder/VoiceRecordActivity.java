@@ -76,14 +76,14 @@ public class VoiceRecordActivity extends Activity {
                 RequestParams params = new RequestParams();
 
                 try {
-                    params.put("sound_file", soundFile);
+                    params.put("sound_data", soundFile);
                 } catch (FileNotFoundException e){
                     Log.e("async", e.getLocalizedMessage());
                 }
 
                 AsyncHttpClient client = new AsyncHttpClient();
 
-                String url = new String ("http://pastebincom/raw.php?i=yD8yBR0E");
+                String url = new String ("http://lit-sierra-6665.herokuapp.com/upload");
                 client.post(url, params, new AsyncHttpResponseHandler() {
                     @Override
                     public void onSuccess(int i, Header[] headers, byte[] bytes) {
