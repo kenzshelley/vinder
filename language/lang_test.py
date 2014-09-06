@@ -1,3 +1,5 @@
+#!/usr/local/bin/python
+
 from nltk_features import get_features 
 import sys
 
