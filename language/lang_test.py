@@ -6,6 +6,10 @@ import sys
 # When running it stepwise I will just type in a few example sentences.
 
 print sys.argv
-test_text = sys.argv[1]
-test_features = get_features(test_text)
+filename = sys.argv[1]
+story = file(filename, 'r')
+story_text = story.read()
+story.close()
+
+test_features = get_features(story_text)
 print(test_features)
