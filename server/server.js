@@ -32,6 +32,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(multer({ dest: './uploads'}));
 
+//testing to make sure the basic GET works
+app.get('/', function(req,res) {
+    res.send('Hello World');
+});
+
 app.post('/receive_mp3', function(req, res) {
   // Will be recieved in the request so that we can hash it
   // var username = req.body.un;
