@@ -6,6 +6,11 @@
   "dependencies": {
     "express": "4.8.8",
     "body-parser": "*",
-    "jquery": "*"
+    "jquery": "*",
+    "aws-sdk": "*", 
+    "knox": "*",
+    "node-fs": "*", 
+    "s3-upload": "*",
+    "MD5": "*"
   }
 }
