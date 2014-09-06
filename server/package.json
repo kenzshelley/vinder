@@ -12,6 +12,7 @@
     "aws-sdk": "*", 
     "knox": "*",
     "node-fs": "*", 
+    "s3": "*",
     "s3-upload": "*",
     "MD5": "*",
     "multer": "*"
