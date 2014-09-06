@@ -6,6 +6,6 @@
   "dependencies": {
     "express": "4.8.8",
     "body-parser": "*",
-    "jquery": "*"
+    "firebase": "*"
   }
 }
