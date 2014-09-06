@@ -60,7 +60,7 @@ app.post('/receive_mp3', function(req, res) {
 
     s3Params: {
       Bucket: "audio_from_users",
-      Key: "hash"
+      Key: hash 
 
      // other options supported by putObject, except Body and ContentLength.
      // See: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#putObject-property
@@ -75,33 +75,29 @@ app.post('/receive_mp3', function(req, res) {
              uploader.progressAmount, uploader.progressTotal);
   });
 
+  var URL = '';
   // var url thing might be completely wrong
-  var url = uploader.on('end', function() {
+  uploader.on('end', function() {
   console.log("done uploading");
     var params = {Bucket: 'audio_from_users', Key: 'hash'};
     var s3 = new AWS.S3(); 
     s3.getSignedUrl('getObject', params, function(err, url) {
-      return url; 
+      URL = url; 
+      console.log("just set url");
+      console.log(url);
+      console.log(URL);
+      var options = {
+        mode: 'text',
+        args: [hash, URL, audio_path]
+      };
+  
+      PythonShell.run('process_audio.py',options, function (err) {
+        if (err) throw err;
+        // results is an array consisting of messages collected during execution
+        console.log('Successfully ran python script');
+      });
     });
   });
-
-
-  // Some how we need to get this from s3
-  var url = '';
-
-  var audio = 5;
-
-  var options = {
-    mode: 'text',
-    args: [hash, url, audio_path]
-  };
-  
-  PythonShell.run('process_audio.py',options, function (err) {
-    if (err) throw err;
-    // results is an array consisting of messages collected during execution
-    console.log('Successfully ran python script');
-  });
-  
   res.send(hash);
 });
 
