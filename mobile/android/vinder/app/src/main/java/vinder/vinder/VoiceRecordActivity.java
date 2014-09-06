@@ -10,13 +10,26 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
+
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import com.loopj.android.http.*;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 
 public class VoiceRecordActivity extends Activity {
     private Button mRecordButton;
     private Button mPlayButton;
+    private Button mSendButton;
+
     private MediaRecorder mRecorder;
     private MediaPlayer mMediaPlayer;
 
@@ -31,9 +44,12 @@ public class VoiceRecordActivity extends Activity {
         setContentView(R.layout.activity_voice_record);
 
         mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-        mFileName += "/audiorecordtest.mp3";
+        mFileName += "/voicefile.mp3";
 
         mRecordButton = (Button)findViewById(R.id.record_voice_button);
+        mPlayButton = (Button)findViewById(R.id.play_voice_button);
+        mSendButton = (Button)findViewById(R.id.send_voice_button);
+
         mRecordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -49,19 +65,35 @@ public class VoiceRecordActivity extends Activity {
 
             }
         });
-        mPlayButton = (Button)findViewById(R.id.play_voice_button);
+
         mPlayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startPlaying();
             }
         });
-    }
 
-    private void stopRecording(){
-        mRecorder.stop();
-        mRecorder.release();
-        mRecorder = null;
+        mSendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AsyncHttpClient client = new AsyncHttpClient();
+                client.get("http://pastebin.com/raw.php?i=yD8yBR0E", new AsyncHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int i, Header[] headers, byte[] bytes) {
+                        String responseText = new String(bytes);
+                        Toast t = Toast.makeText(getApplicationContext(),responseText, Toast.LENGTH_SHORT);
+                        t.show();
+                    }
+
+                    @Override
+                    public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+
+                        Toast t = Toast.makeText(getApplicationContext(),"failed", Toast.LENGTH_SHORT);
+                        t.show();
+                    }
+                });
+            }
+        });
     }
 
     private void startRecording() {
@@ -74,20 +106,36 @@ public class VoiceRecordActivity extends Activity {
         try {
             mRecorder.prepare();
         } catch (IOException e) {
-            Log.e("LOG", "prepare() failed");
+            Log.e("MediaRecorder", "prepare() failed");
         }
 
         mRecorder.start();
     }
 
+    private void stopRecording(){
+        mRecorder.stop();
+        mRecorder.release();
+        mRecorder = null;
+    }
+
+
     private void startPlaying() {
         mMediaPlayer = new MediaPlayer();
+        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                mMediaPlayer.release();
+                mMediaPlayer = null;
+                Log.d("MediaPlayer", "released");
+            }
+        });
+
         try {
             mMediaPlayer.setDataSource(mFileName);
             mMediaPlayer.prepare();
             mMediaPlayer.start();
         } catch (IOException e) {
-            Log.e("LOGTAG", "prepare() failed");
+            Log.e("MediaPlayer", "prepare() failed");
         }
     }
 

@@ -21,5 +21,11 @@
         android:layout_below="@id/record_voice_button"
         android:id="@+id/play_voice_button"/>
 
+    <Button
+        android:text="@string/send_voice"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/play_voice_button"
+        android:id="@+id/send_voice_button"/>
 
 </RelativeLayout>
