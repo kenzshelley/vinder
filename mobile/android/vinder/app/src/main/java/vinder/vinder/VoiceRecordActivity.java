@@ -57,7 +57,7 @@ public class VoiceRecordActivity extends Activity {
 
 
         mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-        mFileName += "/voicefile.wav";
+        mFileName += "/voicefile.mp3";
 
         mRecordButton = (Button)findViewById(R.id.record_voice_button);
         mPlayButton = (Button)findViewById(R.id.play_voice_button);
@@ -152,7 +152,7 @@ public class VoiceRecordActivity extends Activity {
 
                 AsyncHttpClient client = new AsyncHttpClient();
 
-                String url = new String ("http://agile-peak-2922.herokuapp.com/receive_mp3");
+                String url = new String ("http://192.168.43.203:5000/receive_mp3");
                 client.post(url, params, new AsyncHttpResponseHandler() {
                     @Override
                     public void onSuccess(int i, Header[] headers, byte[] bytes) {
@@ -174,6 +174,7 @@ public class VoiceRecordActivity extends Activity {
 
     private void startRecording() {
         mRecorder = new MediaRecorder();
+        mRecorder.setAudioChannels(1);
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         mRecorder.setOutputFile(mFileName);

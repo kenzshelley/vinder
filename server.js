@@ -32,6 +32,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(multer({ dest: './uploads'}));
 
+app.get('/', function(req,res) {
+    res.send('Hello World');
+});
 app.post('/receive_mp3', function(req, res) {
   // Will be recieved in the request so that we can hash it
   var username = req.body.email_address;
@@ -43,6 +46,7 @@ app.post('/receive_mp3', function(req, res) {
     console.log(util.inspect(req.files));
     fs.exists(req.files.sound_data.path, function(exists) {
       if (exists) {
+
         console.log("Got audio file!");
       } else {
         console.log("Didn't get audio file!");
@@ -51,7 +55,7 @@ app.post('/receive_mp3', function(req, res) {
   } else {
     console.log('no files found!');
   }
-  var audio_path = './uploads/' + hash + '.wav';
+  var audio_path = './uploads/' + hash + '.mp3';
   fs.rename(req.files.sound_data.path, audio_path);
 
   var params = {
@@ -82,7 +86,7 @@ app.post('/receive_mp3', function(req, res) {
     var s3 = new AWS.S3(); 
     s3.getSignedUrl('getObject', params, function(err, url) {
       URL = url; 
-      var new_audio_path = './uploads/' + hash + '.wav';
+      var new_audio_path = './uploads/' + hash + '.mp3';
       var options = {
         mode: 'text',
         args: [new_audio_path]
@@ -198,6 +202,8 @@ function word_match (user1_string, user2_string) {
   }
   return set_intersection;
 }
+
+
 
 
 
