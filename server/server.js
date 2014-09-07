@@ -34,8 +34,7 @@ app.use(multer({ dest: './uploads'}));
 
 app.post('/receive_mp3', function(req, res) {
   // Will be recieved in the request so that we can hash it
-  // var username = req.body.un;
-  var username = 'santoshm@umich.edu';
+  var username = req.body.email_address;
   var hash = String(md5(username));
   console.log(hash);
 
