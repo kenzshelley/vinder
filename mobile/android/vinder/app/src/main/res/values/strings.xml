@@ -9,5 +9,6 @@
     <string name="start_play_voice">Press to start playing</string>
     <string name="stop_play_voice">Press to stop playing</string>
     <string name="send_voice">Press to send to server</string>
+    <string name="enter_email">Enter email address here</string>
 
 </resources>

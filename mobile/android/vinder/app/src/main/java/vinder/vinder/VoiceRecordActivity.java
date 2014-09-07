@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import org.apache.http.Header;
@@ -25,6 +26,7 @@ public class VoiceRecordActivity extends Activity {
     private Button mRecordButton;
     private Button mPlayButton;
     private Button mSendButton;
+    private EditText mEmailField;
 
     private MediaRecorder mRecorder;
     private MediaPlayer mMediaPlayer;
@@ -45,6 +47,7 @@ public class VoiceRecordActivity extends Activity {
         mRecordButton = (Button)findViewById(R.id.record_voice_button);
         mPlayButton = (Button)findViewById(R.id.play_voice_button);
         mSendButton = (Button)findViewById(R.id.send_voice_button);
+        mEmailField = (EditText) findViewById(R.id.edit_email_field);
 
         mRecordButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,15 +78,17 @@ public class VoiceRecordActivity extends Activity {
                 File soundFile = new File(mFileName);
                 RequestParams params = new RequestParams();
 
+                String emailAddress = mEmailField.getText().toString();
                 try {
                     params.put("sound_data", soundFile);
+                    params.put("email_address", emailAddress);
                 } catch (FileNotFoundException e){
                     Log.e("async", e.getLocalizedMessage());
                 }
 
                 AsyncHttpClient client = new AsyncHttpClient();
 
-                String url = new String ("http://lit-sierra-6665.herokuapp.com/upload");
+                String url = new String ("http://agile-peak-2922.herokuapp.com/receive_mp3");
                 client.post(url, params, new AsyncHttpResponseHandler() {
                     @Override
                     public void onSuccess(int i, Header[] headers, byte[] bytes) {
