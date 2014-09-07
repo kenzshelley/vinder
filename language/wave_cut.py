@@ -2,7 +2,7 @@ import wave as w
 import math
 
 # This is a parameter controlling how long you want each chunk
-SEGMENT_TIME = 6
+SEGMENT_TIME = 5
 
 def cut_wave(file_name):
 	# Splits the wave file, but then returns a list of the new file names
