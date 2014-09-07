@@ -21,17 +21,19 @@ def audio_convert(filename):
 
     cut_files = {}
     text = {}
-
+    
+    error_file = open('error.txt', 'w')
+    error_file.write(filename)
     for speed in ['slow', 'fast']:
         if speed == 'slow':
             cut_files[speed] = cut_wave(filename, 0.70)
         else:
             cut_files[speed] = cut_wave(filename, 0.85) 
-
-        pool = ThreadPool(processes = len(cut_files[speed]))
-        # text[speed] = [chunk_convert(x) for x in cut_files[speed]]
-        text[speed] = pool.map(chunk_convert, cut_files[speed])
-        pool.close()
+        # assert(False)
+        # pool = ThreadPool(processes = len(cut_files[speed]))
+        # text[speed] = pool.map(chunk_convert, cut_files[speed])
+        # pool.close()
+        text[speed] = [chunk_convert(x) for x in cut_files[speed]]
         print "Closed a pool"
         # Clear out the temporary files created
         for x in cut_files[speed]:
@@ -72,7 +74,6 @@ def chunk_convert(filename):
             return translate
 
     return ''
-
 
 def audio_parse(filename):
     text_list = audio_convert(filename)
