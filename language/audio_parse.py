@@ -5,9 +5,13 @@ import sys
 import os
 from wave_cut import cut_wave
 from nltk_features import get_features 
+from nltk.corpus import stopwords
 
 trial_keys = ['AIzaSyCzfSslLEsPH5VNMsoywLTmooC2od2IZoc',
-              'AIzaSyDUY3b_BdCeGcRJPck6Hf1m1sy21-6LFxA']
+              'AIzaSyDUY3b_BdCeGcRJPck6Hf1m1sy21-6LFxA',
+              'AIzaSyD-53-pSVtSMoD7kNjX2wopSnIAAH87108',
+              'AIzaSyBH4N84Gw04sZlvqc8QAw5QdRGcscn8Sks',
+              'AIzaSyDeHXQ3GA-RFcFbobQv0GS53EhG1C-yMLk']
 
 def audio_convert(filename):
 	# This combines the cutting and the conversions
@@ -59,9 +63,22 @@ def audio_parse(filename):
 	text_list = audio_convert(filename)
 	if(len(text_list) == 0):
 		return([None] * 15)	
-	full_text = ' '.join(text_list)
+	full_text =  ' ' + ' '.join(text_list) + ' '
 	full_parse = get_features(full_text)
+	full_text.lower()
+
+	# print full_parse
+	# print full_text
+
+	# print stopwords.words('english')
+
+	# Remove stopwords when recording the text
+	for w in stopwords.words('english') + ['like']:
+		full_text = full_text.replace(' ' + w + ' ', ' ')
+
+	# print full_text
+	full_parse.append(full_text.strip())
 	return full_parse
 
-# x = audio_parse('audio/final_rap.wav')
+# x = audio_parse('audio/guitar.wav')
 # print(x)
