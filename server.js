@@ -133,8 +133,10 @@ function update_matches(features, user_hash, url, username) {
         if (!user['matches']) {
           console.log('matches does not exist');
           user['matches'] = [user_hash];
+          user['words'] = [word_match(features[features.length-1], user['features'][features.length-1])];
         } else {
           user['matches'].push(user_hash);
+          user['words'].push(word_match(features[features.length-1], user['features'][features.length-1]));
         }
         new_user_data['matches'].push(key); 
       }
@@ -164,7 +166,26 @@ function match(features_1, features_2) {
   return avg;
 }
 
-
+function word_match (user1_string, user2_string) {
+  user1_string = user1_string.split(" ");
+  user2_string = user2_string.split(" ");
+  set_intersection = []; 
+  var j = 0; 
+  for (var i=0; i < user1_string.length; ++i) {
+    if (user2_string.indexOf(user1_string[i]) != -1) {
+        var inIntersection = false; 
+        for (var k = 0; k < set_intersection.length; k++){
+          if (set_intersection[k] == user1_string[i]) {
+            inIntersection = true;
+          }
+        }
+        if (!inIntersection) {
+          set_intersection[j++] = user1_string[i];
+        }
+    }
+  }
+  return set_intersection;
+}
 
 
 
