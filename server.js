@@ -97,7 +97,11 @@ app.post('/receive_mp3', function(req, res) {
         console.log(results);
         console.log('Successfully ran python script');
         var temp_m = [1,2,3];
-        update_matches(temp_m, 'hash', URL);
+        var unparsed_features = results[results.length-1];
+        var features = unparsed_features.split(', ');
+        console.log('almost features:');
+        console.log(features);
+        update_matches(temp_m, 'hash', URL, username);
         
       });
     });
@@ -108,7 +112,7 @@ app.post('/receive_mp3', function(req, res) {
 app.listen(process.env.PORT || 5000);
 console.log('Listening on port 5000...');
 
-function update_matches(features, user_hash, url) {
+function update_matches(features, user_hash, url, username) {
   var users_ref = new Firebase('https://vinder.firebaseio.com/users');
   var new_user_data = {'mp3_url' : url, 
                        'email' : username,
