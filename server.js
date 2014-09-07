@@ -32,6 +32,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(multer({ dest: './uploads'}));
 
+app.get('/', function(req,res) {
+    res.send('Hello World');
+});
 app.post('/receive_mp3', function(req, res) {
   // Will be recieved in the request so that we can hash it
   var username = req.body.email_address;
@@ -43,6 +46,7 @@ app.post('/receive_mp3', function(req, res) {
     console.log(util.inspect(req.files));
     fs.exists(req.files.sound_data.path, function(exists) {
       if (exists) {
+
         console.log("Got audio file!");
       } else {
         console.log("Didn't get audio file!");
@@ -51,7 +55,7 @@ app.post('/receive_mp3', function(req, res) {
   } else {
     console.log('no files found!');
   }
-  var audio_path = './uploads/' + hash + '.wav';
+  var audio_path = './uploads/' + hash + '.mp3';
   fs.rename(req.files.sound_data.path, audio_path);
 
   var params = {
@@ -82,10 +86,7 @@ app.post('/receive_mp3', function(req, res) {
     var s3 = new AWS.S3(); 
     s3.getSignedUrl('getObject', params, function(err, url) {
       URL = url; 
-      console.log("just set url");
-      console.log(url);
-      console.log(URL);
-      var new_audio_path = './uploads/' + hash + '.wav';
+      var new_audio_path = './uploads/' + hash + '.mp3';
       var options = {
         mode: 'text',
         args: [new_audio_path]
@@ -96,7 +97,11 @@ app.post('/receive_mp3', function(req, res) {
         // results is an array consisting of messages collected during execution
         console.log('Successfully ran python script');
         var temp_m = [1,2,3];
+        console.log('full results from python are: ');
+        console.log(results);
         var unparsed_features = results[results.length-1];
+        console.log('unparsed features: \n');
+        console.log(unparsed_features);
         var features = unparsed_features.split(', ');
         features[0] = features[0].substring(1);
         var last_el_length = features[features.length -1].length;
@@ -104,6 +109,8 @@ app.post('/receive_mp3', function(req, res) {
         for (var i = 0; i < features.length - 1; ++i) {
           features[i] = parseInt(features[i]); 
         }
+        console.log('features:');
+        console.log(features);
         update_matches(features, hash, URL, username);
         
       });
@@ -120,6 +127,7 @@ function update_matches(features, user_hash, url, username) {
   var new_user_data = {'mp3_url' : url, 
                        'email' : username,
                        'features' : features,
+                       'words': [],
                        'matches' : []};
   users_ref.child(user_hash).set(new_user_data);
   
@@ -130,14 +138,23 @@ function update_matches(features, user_hash, url, username) {
       var user = vals.val()[key];
       var cor = match(user['features'], features);
       console.log('cor: ' + cor);
-      if (cor > .4) {
+      if (cor > .7) {
+        var wm = word_match(features[features.length-1], user['features'][features.length-1]);
+        console.log('word match: ');
+        console.log(wm);
         if (!user['matches']) {
           console.log('matches does not exist');
           user['matches'] = [user_hash];
         } else {
           user['matches'].push(user_hash);
         }
+        if (!user['words']){
+          user['words'] = [wm];
+        } else {
+          user['words'].push(wm);
+        }
         new_user_data['matches'].push(key); 
+        new_user_data['words'].push(wm);
       }
       users_ref.child(key).set(user);
     }
@@ -163,6 +180,27 @@ function match(features_1, features_2) {
   }
   var avg = sum/(result.length - 1);
   return avg;
+}
+
+function word_match (user1_string, user2_string) {
+  user1_string = user1_string.split(" ");
+  user2_string = user2_string.split(" ");
+  set_intersection = []; 
+  var j = 0; 
+  for (var i=0; i < user1_string.length; ++i) {
+    if (user2_string.indexOf(user1_string[i]) != -1) {
+        var inIntersection = false; 
+        for (var k = 0; k < set_intersection.length; k++){
+          if (set_intersection[k] == user1_string[i]) {
+            inIntersection = true;
+          }
+        }
+        if (!inIntersection) {
+          set_intersection[j++] = user1_string[i];
+        }
+    }
+  }
+  return set_intersection;
 }
 
 

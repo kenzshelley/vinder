@@ -1,6 +1,5 @@
 import sys
-print sys.path
-sys.path.append('/Users/Mackenzie/Documents/2014/vinder')
+import os
 from firebase import firebase
 #from language import audio_parse
 from language.audio_parse import *
