@@ -99,9 +99,17 @@ app.post('/receive_mp3', function(req, res) {
         var temp_m = [1,2,3];
         var unparsed_features = results[results.length-1];
         var features = unparsed_features.split(', ');
+        features[0] = features[0].substring(1);
+        var last_el_length = features[features.length -1].length;
+        features[features.length - 1] = features[features.length - 1].substring(0, last_el_length -1);
         console.log('almost features:');
         console.log(features);
-        update_matches(temp_m, 'hash', URL, username);
+        for (var i = 0; i < features.length; ++i) {
+          features[i] = parseInt(features[i]); 
+        }
+        console.log('final features:\n');
+        console.log(features);
+        update_matches(features, 'hash', URL, username);
         
       });
     });
