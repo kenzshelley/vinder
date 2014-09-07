@@ -94,7 +94,6 @@ app.post('/receive_mp3', function(req, res) {
       PythonShell.run('process_audio.py',options, function (err, results) {
         if (err) throw err;
         // results is an array consisting of messages collected during execution
-        console.log(results);
         console.log('Successfully ran python script');
         var temp_m = [1,2,3];
         var unparsed_features = results[results.length-1];
@@ -102,13 +101,9 @@ app.post('/receive_mp3', function(req, res) {
         features[0] = features[0].substring(1);
         var last_el_length = features[features.length -1].length;
         features[features.length - 1] = features[features.length - 1].substring(0, last_el_length -1);
-        console.log('almost features:');
-        console.log(features);
         for (var i = 0; i < features.length - 1; ++i) {
           features[i] = parseInt(features[i]); 
         }
-        console.log('final features:\n');
-        console.log(features);
         update_matches(features, hash, URL, username);
         
       });
@@ -129,8 +124,6 @@ function update_matches(features, user_hash, url, username) {
   users_ref.child(user_hash).set(new_user_data);
   
   users_ref.once('value', function(vals) {
-    console.log('on value');
-    console.log(vals.val());
     for (var key in vals.val()) {
       if (key == user_hash) 
         continue; 
