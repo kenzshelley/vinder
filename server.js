@@ -82,9 +82,6 @@ app.post('/receive_mp3', function(req, res) {
     var s3 = new AWS.S3(); 
     s3.getSignedUrl('getObject', params, function(err, url) {
       URL = url; 
-      console.log("just set url");
-      console.log(url);
-      console.log(URL);
       var new_audio_path = './uploads/' + hash + '.wav';
       var options = {
         mode: 'text',
