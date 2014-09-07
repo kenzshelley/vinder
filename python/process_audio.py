@@ -1,17 +1,14 @@
-from firebase import firebase
 import sys
+print sys.path
+sys.path.append('/Users/Mackenzie/Documents/2014/vinder')
+from firebase import firebase
+#from language import audio_parse
+from language.audio_parse import *
 
-def main(user_hash, mp3_url, audio_path): 
-  print 'running main'
-#  features = process_audio(audio_path)
-  features = [1,2,3]
-
-  # Store feature vector in Firebase
-  fb = firebase.FirebaseApplication('https://vinder.firebaseio.com', None)
-  fb.post('users/',  {'features': features,
-                     'user_hash': user_hash,
-                     'mp3_url': mp3_url})
-
+def main(audio_path): 
+  print audio_path
+  features = audio_parse(audio_path)
+  print features
 
 if __name__ == '__main__':
-  main(sys.argv[1], sys.argv[2], sys.argv[3])
+  main(sys.argv[1])

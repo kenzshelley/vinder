@@ -56,3 +56,6 @@ def cut_wave(file_name, speed_factor = 0.85):
 	sound_write.close()
 
 	return new_files
+
+if __name__ == "__main__": 
+  cut_wave('../uploads/undefined.wav')
