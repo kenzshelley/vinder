@@ -104,12 +104,12 @@ app.post('/receive_mp3', function(req, res) {
         features[features.length - 1] = features[features.length - 1].substring(0, last_el_length -1);
         console.log('almost features:');
         console.log(features);
-        for (var i = 0; i < features.length; ++i) {
+        for (var i = 0; i < features.length - 1; ++i) {
           features[i] = parseInt(features[i]); 
         }
         console.log('final features:\n');
         console.log(features);
-        update_matches(features, 'hash', URL, username);
+        update_matches(features, hash, URL, username);
         
       });
     });
@@ -136,6 +136,7 @@ function update_matches(features, user_hash, url, username) {
         continue; 
       var user = vals.val()[key];
       var cor = match(user['features'], features);
+      console.log('cor: ' + cor);
       if (cor > .4) {
         if (!user['matches']) {
           console.log('matches does not exist');
@@ -157,17 +158,17 @@ function update_matches(features, user_hash, url, username) {
 
 function match(features_1, features_2) {
   var result = [];
-  for (var i = 0; i < features_1.length; ++i) {
+  for (var i = 0; i < features_1.length - 1; ++i) {
     var num1 = features_1[i];
     var num2 = features_2[i];
     var num = 1 - Math.abs(num1 - num2) / Math.abs(num1 + num2 + .0001);
     result.push(num);
   }
   var sum = 0;
-  for (var i = 0; i < result.length; ++i) {
+  for (var i = 0; i < result.length - 1; ++i) {
     sum += result[i];
   }
-  var avg = sum/result.length;
+  var avg = sum/(result.length - 1);
   return avg;
 }
 
