@@ -1,6 +1,7 @@
 package vinder.vinder;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
@@ -14,6 +15,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import org.apache.http.Header;
+
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.loopj.android.http.*;
 
 import java.io.File;
@@ -21,6 +27,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class VoiceRecordActivity extends Activity {
     private Button mRecordButton;
@@ -34,15 +45,19 @@ public class VoiceRecordActivity extends Activity {
     private String mFileName;
 
     boolean mIsRecording;
-    boolean mIsPlaying;
+
+    Firebase mFirebaseRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_voice_record);
 
+        mFirebaseRef = new Firebase("https://vinder.firebaseio.com");
+
+
         mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-        mFileName += "/voicefile.mp3";
+        mFileName += "/voicefile.wav";
 
         mRecordButton = (Button)findViewById(R.id.record_voice_button);
         mPlayButton = (Button)findViewById(R.id.play_voice_button);
@@ -79,6 +94,55 @@ public class VoiceRecordActivity extends Activity {
                 RequestParams params = new RequestParams();
 
                 String emailAddress = mEmailField.getText().toString();
+
+                String hashedEmailAddress = "FAILED HASHING";
+                try {
+                    // Create MD5 Hash
+                    MessageDigest digest = java.security.MessageDigest
+                            .getInstance("MD5");
+                    digest.update(emailAddress.getBytes());
+                    byte messageDigest[] = digest.digest();
+
+                    // Create Hex String
+                    StringBuilder hexString = new StringBuilder();
+                    for (byte aMessageDigest : messageDigest) {
+                        String h = Integer.toHexString(0xFF & aMessageDigest);
+                        while (h.length() < 2)
+                            h = "0" + h;
+                        hexString.append(h);
+                    }
+                    hashedEmailAddress = hexString.toString();
+
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
+                mFirebaseRef.child("users").child(hashedEmailAddress).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        //extract all of the data from the dataSnapshot
+                        ArrayList<String> emailMatches = new ArrayList<String>();
+                        Iterator<DataSnapshot> emailMatchIterator = dataSnapshot.child("matches").getChildren().iterator();
+
+                        while (emailMatchIterator.hasNext()) {
+                            emailMatches.add(emailMatchIterator.next().getName());
+                        }
+                        if (!emailMatches.isEmpty()) {
+                            Intent intent = new Intent(getApplicationContext(), MatchActivity.class);
+                            intent.putExtra("email_address", dataSnapshot.getName());
+                            intent.putExtra("mp3_url", dataSnapshot.child("mp3_url").getName());
+
+                            intent.putStringArrayListExtra("match_emails", emailMatches);
+                            startActivity(intent);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+
                 try {
                     params.put("sound_data", soundFile);
                     params.put("email_address", emailAddress);

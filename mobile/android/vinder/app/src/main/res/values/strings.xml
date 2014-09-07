@@ -10,5 +10,6 @@
     <string name="stop_play_voice">Press to stop playing</string>
     <string name="send_voice">Press to send to server</string>
     <string name="enter_email">Enter email address here</string>
+    <string name="title_activity_match">MatchActivity</string>
 
 </resources>
