@@ -1,8 +1,5 @@
 import sys
 import os
-print sys.path
-print os.path.dirname(os.path.abspath(__file__))
-sys.path.append('/app/vinder/')
 from firebase import firebase
 #from language import audio_parse
 from language.audio_parse import *

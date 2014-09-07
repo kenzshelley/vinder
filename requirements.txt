@@ -14,3 +14,4 @@ speechrecognition
 nltk
 numpy
 wave
+multiprocessing
