@@ -94,6 +94,8 @@ app.post('/receive_mp3', function(req, res) {
         console.log('Successfully ran python script');
         var temp_m = [1,2,3];
         var unparsed_features = results[results.length-1];
+        console.log('unparsed features: \n');
+        console.log(unparsed_features);
         var features = unparsed_features.split(', ');
         features[0] = features[0].substring(1);
         var last_el_length = features[features.length -1].length;
@@ -119,6 +121,7 @@ function update_matches(features, user_hash, url, username) {
   var new_user_data = {'mp3_url' : url, 
                        'email' : username,
                        'features' : features,
+                       'words': [],
                        'matches' : []};
   users_ref.child(user_hash).set(new_user_data);
   
@@ -129,16 +132,23 @@ function update_matches(features, user_hash, url, username) {
       var user = vals.val()[key];
       var cor = match(user['features'], features);
       console.log('cor: ' + cor);
-      if (cor > .4) {
+      if (cor > .7) {
+        var wm = word_match(features[features.length-1], user['features'][features.length-1]);
+        console.log('word match: ');
+        console.log(wm);
         if (!user['matches']) {
           console.log('matches does not exist');
           user['matches'] = [user_hash];
-          user['words'] = [word_match(features[features.length-1], user['features'][features.length-1])];
         } else {
           user['matches'].push(user_hash);
-          user['words'].push(word_match(features[features.length-1], user['features'][features.length-1]));
+        }
+        if (!user['words']){
+          user['words'] = [wm];
+        } else {
+          user['words'].push(wm);
         }
         new_user_data['matches'].push(key); 
+        new_user_data['words'].push(wm);
       }
       users_ref.child(key).set(user);
     }
