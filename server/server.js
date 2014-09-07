@@ -87,7 +87,7 @@ app.post('/receive_mp3', function(req, res) {
       console.log(URL);
       var options = {
         mode: 'text',
-        args: [hash, URL, audio_path]
+        args: [audio_path]
       };
   
       PythonShell.run('process_audio.py',options, function (err, results) {
@@ -95,6 +95,9 @@ app.post('/receive_mp3', function(req, res) {
         // results is an array consisting of messages collected during execution
         console.log(results);
         console.log('Successfully ran python script');
+        var temp_m = [1,2,3];
+        update_matches(temp_m, 'hash', URL);
+        
       });
     });
   });
@@ -103,4 +106,59 @@ app.post('/receive_mp3', function(req, res) {
 
 app.listen(5000);
 console.log('Listening on port 5000...');
+
+function update_matches(features, user_hash, url) {
+  var users_ref = new Firebase('https://vinder.firebaseio.com/users');
+  var new_user_data = {'mp3_url' : url, 
+                       'features' : features,
+                       'matches' : []};
+  users_ref.child(user_hash).set(new_user_data);
+  
+  users_ref.once('value', function(vals) {
+    console.log('on value');
+    console.log(vals.val());
+    for (var key in vals.val()) {
+      if (key == user_hash) 
+        continue; 
+      var user = vals.val()[key];
+      var cor = match(user['features'], features);
+      if (cor > .4) {
+        if (!user['matches']) {
+          console.log('matches does not exist');
+          user['matches'] = [user_hash];
+        } else {
+          user['matches'].push(user_hash);
+        }
+        new_user_data['matches'].push(key); 
+      }
+      users_ref.child(key).set(user);
+    }
+  users_ref.child(user_hash).set(new_user_data);
+    
+  }, function(err) {
+    console.log('done fucked up');
+  });
+  console.log("blah blah fuck firebase"); 
+}
+
+function match(features_1, features_2) {
+  var result = [];
+  for (var i = 0; i < features_1.length; ++i) {
+    var num1 = features_1[i];
+    var num2 = features_2[i];
+    var num = 1 - Math.abs(num1 - num2) / Math.abs(num1 + num2 + .0001);
+    result.push(num);
+  }
+  var sum = 0;
+  for (var i = 0; i < result.length; ++i) {
+    sum += result[i];
+  }
+  var avg = sum/result.length;
+  return avg;
+}
+
+
+
+
+
 
