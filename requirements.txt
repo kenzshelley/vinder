@@ -1,3 +1,4 @@
+git://github.com/mikexstudios/python-firebase.git#egg=python-firebase
 BeautifulSoup==3.2.1
 Flask==0.9
 Jinja2==2.6
