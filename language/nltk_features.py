@@ -35,7 +35,7 @@ def get_features(full_text):
     all_sent = [x.replace('.', '') for x in all_sent]
 
     parse_sent = [nltk.pos_tag(nltk.word_tokenize(x)) for x in all_sent]
-    # print parse_sent
+    print parse_sent
 
     parse_words = [item for sublist in parse_sent for item in sublist]
 
@@ -75,7 +75,7 @@ def get_features(full_text):
             # print pair[1]
             word_types[pair[1]] = word_types[pair[1]] + 1
 
-    # print word_types
+    print word_types
 
     # We now follow the formulas and compute the pure densities
 
@@ -94,7 +94,7 @@ def get_features(full_text):
     inter = word_types['UH']/tot
 
     densities = [adj, noun, verb, aux, art, conj, advb, pron, prep, inter]
-    densities = [round(x, 3) for x in densities]
+    densities = [round(x * 10, 2) for x in densities]
 
     # Now we compute the ratios
 
