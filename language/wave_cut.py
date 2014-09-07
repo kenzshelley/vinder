@@ -2,17 +2,17 @@ import wave as w
 import math
 
 # This is a parameter controlling how long you want each chunk
-SEGMENT_TIME = 5
+SEGMENT_TIME = 7
 
-def cut_wave(file_name):
+def cut_wave(file_name, speed_factor = 0.85):
 	# Splits the wave file, but then returns a list of the new file names
 	basename = file_name.split('/')[-1].replace('.wav', '')
 	sounds = w.open(file_name, 'r')
 
 	source_param = sounds.getparams()
 
-	tot_frames = source_param[3]
 	speed_frames = source_param[2]
+	tot_frames = min(source_param[3], 30 * speed_frames)
 	small_time = math.floor(0.6 * speed_frames)
 
 	segments = tot_frames/(6 * speed_frames) + 1
@@ -36,7 +36,7 @@ def cut_wave(file_name):
 		# Now write a bit	
 		sound_write = w.open(new_name, 'wb')
 		sound_write.setparams(source_param)
-		sound_write.setframerate(speed_frames * 0.8)
+		sound_write.setframerate(speed_frames * speed_factor)
 		sound_write.writeframes(sound_chunk)
 		sound_write.close()
 
