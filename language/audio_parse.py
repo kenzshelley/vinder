@@ -3,6 +3,7 @@
 import speech_recognition as sr
 import sys
 import os
+import nltk
 # import multiprocessing as mp
 from multiprocessing import Pool
 from multiprocessing.dummy import Pool as ThreadPool
