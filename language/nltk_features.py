@@ -6,6 +6,8 @@ import numpy as np
 # Load the models 
 SENTDET = nltk.data.load('tokenizers/punkt/english.pickle')
 
+nltk.data.path.append('./nltk_data/')
+
 def get_features(full_text):
     # Get the feature list.
     
