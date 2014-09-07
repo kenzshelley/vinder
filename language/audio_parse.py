@@ -16,6 +16,10 @@ trial_keys = ['AIzaSyCzfSslLEsPH5VNMsoywLTmooC2od2IZoc',
               'AIzaSyBH4N84Gw04sZlvqc8QAw5QdRGcscn8Sks',
               'AIzaSyDeHXQ3GA-RFcFbobQv0GS53EhG1C-yMLk']
 
+nltk_packages = ['stopwords', 'maxent_treebank_pos_tagger', 'punkt', 'tagsets']
+for p in nltk_packages:
+    nltk.download(p)
+
 def audio_convert(filename):
     # This combines the cutting and the conversions
 
