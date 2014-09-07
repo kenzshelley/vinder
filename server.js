@@ -101,6 +101,8 @@ app.post('/receive_mp3', function(req, res) {
         for (var i = 0; i < features.length - 1; ++i) {
           features[i] = parseInt(features[i]); 
         }
+        console.log('features:');
+        console.log(features);
         update_matches(features, hash, URL, username);
         
       });
