@@ -3,6 +3,7 @@
 import speech_recognition as sr
 import sys
 import os
+import nltk
 # import multiprocessing as mp
 from multiprocessing import Pool
 from multiprocessing.dummy import Pool as ThreadPool
@@ -15,6 +16,8 @@ trial_keys = ['AIzaSyCzfSslLEsPH5VNMsoywLTmooC2od2IZoc',
               'AIzaSyD-53-pSVtSMoD7kNjX2wopSnIAAH87108',
               'AIzaSyBH4N84Gw04sZlvqc8QAw5QdRGcscn8Sks',
               'AIzaSyDeHXQ3GA-RFcFbobQv0GS53EhG1C-yMLk']
+
+nltk.data.path.append('./nltk_data/')
 
 def audio_convert(filename):
     # This combines the cutting and the conversions
