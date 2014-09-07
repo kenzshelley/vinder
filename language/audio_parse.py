@@ -78,7 +78,7 @@ def chunk_convert(filename):
 def audio_parse(filename):
     text_list = audio_convert(filename)
     if(len(text_list) == 0):
-        return([None] * 16) 
+        return([None] * 16)
     full_text =  ' ' + ' '.join(text_list) + ' '
     full_parse = get_features(full_text)
     full_text.lower()
