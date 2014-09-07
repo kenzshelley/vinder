@@ -91,9 +91,10 @@ app.post('/receive_mp3', function(req, res) {
         args: [hash, URL, audio_path]
       };
   
-      PythonShell.run('process_audio.py',options, function (err) {
+      PythonShell.run('process_audio.py',options, function (err, results) {
         if (err) throw err;
         // results is an array consisting of messages collected during execution
+        console.log(results);
         console.log('Successfully ran python script');
       });
     });
