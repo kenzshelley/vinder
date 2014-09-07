@@ -15,13 +15,23 @@ trial_keys = ['AIzaSyCzfSslLEsPH5VNMsoywLTmooC2od2IZoc',
 
 def audio_convert(filename):
 	# This combines the cutting and the conversions
-	cut_files = cut_wave(filename)
-	text = [chunk_convert(x) for x in cut_files]
 
-	# Clear out the temporary files created
-	for x in cut_files:
-		os.remove(x)
+	cut_files = {}
+	text = {}
 
+	for speed in ['slow', 'fast']:
+		if speed == 'slow':
+			cut_files[speed] = cut_wave(filename, 0.70)
+		else:
+			cut_files[speed] = cut_wave(filename, 0.80)	
+
+		text[speed] = [chunk_convert(x) for x in cut_files[speed]]
+
+		# Clear out the temporary files created
+		for x in cut_files[speed]:
+			os.remove(x)
+
+	text = text['slow'] + text['fast']
 	text = [x for x in text if len(x) > 0]
 	return(text)
 
@@ -62,7 +72,7 @@ def chunk_convert(filename):
 def audio_parse(filename):
 	text_list = audio_convert(filename)
 	if(len(text_list) == 0):
-		return([None] * 15)	
+		return([None] * 16)	
 	full_text =  ' ' + ' '.join(text_list) + ' '
 	full_parse = get_features(full_text)
 	full_text.lower()
