@@ -30,10 +30,10 @@ def audio_convert(filename):
         else:
             cut_files[speed] = cut_wave(filename, 0.85) 
         # assert(False)
-        # pool = ThreadPool(processes = len(cut_files[speed]))
-        # text[speed] = pool.map(chunk_convert, cut_files[speed])
-        # pool.close()
-        text[speed] = [chunk_convert(x) for x in cut_files[speed]]
+        pool = ThreadPool(processes = len(cut_files[speed]))
+        text[speed] = pool.map(chunk_convert, cut_files[speed])
+        pool.close()
+        # text[speed] = [chunk_convert(x) for x in cut_files[speed]]
         print "Closed a pool"
         # Clear out the temporary files created
         for x in cut_files[speed]:
