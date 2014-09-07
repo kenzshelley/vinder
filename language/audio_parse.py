@@ -80,5 +80,5 @@ def audio_parse(filename):
 	full_parse.append(full_text.strip())
 	return full_parse
 
-x = audio_parse('audio/guitar.wav')
-print(x)
+# x = audio_parse('audio/guitar.wav')
+# print(x)
