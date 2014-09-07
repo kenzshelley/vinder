@@ -96,6 +96,8 @@ app.post('/receive_mp3', function(req, res) {
         // results is an array consisting of messages collected during execution
         console.log('Successfully ran python script');
         var temp_m = [1,2,3];
+        console.log('full results from python are: ');
+        console.log(results);
         var unparsed_features = results[results.length-1];
         var features = unparsed_features.split(', ');
         features[0] = features[0].substring(1);
