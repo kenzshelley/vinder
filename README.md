@@ -1,3 +1,5 @@
+<h1>Vindr</h1>
+
 Inspiration: Language Style Matching Predicts Relationship Initiation and Stability http://homepage.psy.utexas.edu/HomePage/Faculty/Pennebaker/Reprints/Ireland_et.al_LSM&amp;relationships.pdf
 
 Key Features: Android prompts the user with an open-ended question and records their answer. The MP3 of their answer is then converted into text and its parts of speech are tagged by the Natural Language Toolkit. This information allows the similarity of two users' language patterns to be calculated using the algorithm described in the paper above. Once a Match is found, it is stored for that user on Firebase. Then the audio of the matches and words used by both users are displayed to both users.
