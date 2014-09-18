@@ -1,6 +1,6 @@
 Inspiration: Language Style Matching Predicts Relationship Initiation and Stability http://homepage.psy.utexas.edu/HomePage/Faculty/Pennebaker/Reprints/Ireland_et.al_LSM&amp;relationships.pdf
 
-Key Features: Android prompts the user with an open-ended question and records their answer. The MP3 of their answer is then converted into text and its parts of speech are tagged by the Natural Language Toolkit. This information allows us to calculate the similarity of two users language patterns using the algorithm described in the paper above. Once a Match is found, it is stored for that user on Firebase. Then the audio of the matches and words used by both users are displayed to both users.
+Key Features: Android prompts the user with an open-ended question and records their answer. The MP3 of their answer is then converted into text and its parts of speech are tagged by the Natural Language Toolkit. This information allows the similarity of two users' language patterns to be calculated using the algorithm described in the paper above. Once a Match is found, it is stored for that user on Firebase. Then the audio of the matches and words used by both users are displayed to both users.
 
 Story: Our founder, Matt Grossman, was a lone wolf venturing across the European backcountry. Staring up at the sky, the stars reminded him of the dim lights of the Manhattan night club he used to dance in. Hungry from his travels, he happened upon the fungus which led to blinding blindness.
 
